@@ -44,6 +44,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void doNotification(View v) {
+		boolean useIndeterminateProgressBar = false;
 		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
 		Notification noti = new Notification.Builder(this)
@@ -51,7 +52,7 @@ public class MainActivity extends ActionBarActivity {
 		.setContentText("Just a Notice")
 		.setSmallIcon(R.drawable.ic_launcher)
 		.setOngoing(true)						//true only dismissable by app
-		.setProgress(100,50,true )				//show a progress bar
+		.setProgress(100,50,useIndeterminateProgressBar )				//show a progress bar
 		.build();
 		noti.flags |= Notification.FLAG_INSISTENT;
 		notificationManager.notify(MYNOTIFICATION, noti);
