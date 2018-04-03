@@ -3,13 +3,15 @@ package com.example.noti;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
 	private static final int MYNOTIFICATION = 1;
 	private static final int MYNOTIFICATION1 = 100;
@@ -44,7 +46,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void doNotification(View v) {
-		boolean useIndeterminateProgressBar = false;
+		boolean useIndeterminateProgressBar = true;
 		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
 		Notification noti = new Notification.Builder(this)
@@ -54,6 +56,7 @@ public class MainActivity extends ActionBarActivity {
 		.setOngoing(true)						//true only dismissable by app
 		.setProgress(100,50,useIndeterminateProgressBar )				//show a progress bar
 		.build();
+
 		noti.flags |= Notification.FLAG_INSISTENT;
 		notificationManager.notify(MYNOTIFICATION, noti);
 	}
@@ -74,6 +77,7 @@ public class MainActivity extends ActionBarActivity {
 				.setOngoing(false)
 				.build();
 		noti.flags |= Notification.FLAG_INSISTENT;
-		notificationManager.notify(MYNOTIFICATION1, noti);
+		//notificationManager.notify(MYNOTIFICATION1, noti);
+		notificationManager.notify(myCount, noti);
 	}
 }
