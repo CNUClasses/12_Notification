@@ -1,9 +1,11 @@
 package com.example.noti;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
 	private static final int MYNOTIFICATION = 1;
 	private static final int MYNOTIFICATION1 = 100;
+	private static final String CHANNEL_ID = "10";
 
 	private int myCount =0;
 
@@ -22,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-			}
+	}
 
 
 	@Override
@@ -77,7 +80,10 @@ public class MainActivity extends AppCompatActivity {
 				.setOngoing(false)
 				.build();
 		noti.flags |= Notification.FLAG_INSISTENT;
-		//notificationManager.notify(MYNOTIFICATION1, noti);
-		notificationManager.notify(myCount, noti);
+		//the following will modify an existing notification over and over
+		notificationManager.notify(MYNOTIFICATION1, noti);
+
+		//the following creates a new notification
+//		notificationManager.notify(myCount, noti);
 	}
 }
