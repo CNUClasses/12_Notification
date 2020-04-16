@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
 	private static final int MYNOTIFICATION = 1;
 	private static final int MYNOTIFICATION1 = 100;
-	private static final String CHANNEL_ID = "KP";
+
 	int progress = 0;
 
 	private int myCount =0;
@@ -53,25 +53,34 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	public void doNotification(View v) {
-		progress = progress+10;
 		boolean useIndeterminateProgressBar = true;
-		NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
 				.setSmallIcon(R.drawable.ic_launcher)
 				.setContentTitle(getString(R.string.app_name))
 				.setContentText("Just a Notice")
 				.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+		//want a progressbar? Do this
+//		int PROGRESS_MAX = 100;
+//		int PROGRESS_CURRENT = progress;
+//		builder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
+//		progress =progress+10;
+
+		//get a manager and post notification
+		NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 		notificationManager.notify(MYNOTIFICATION, builder.build());
 	}
 
 	public void doCancelNotification(View v) {
 		NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 		notificationManager.cancel(MYNOTIFICATION);
+
+		//want a progressbar? Do this
+//		progress=0;
 	}
 
 	public void doIncrementNotification(View view) {
 		myCount++;
-		NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
 		Notification noti = new NotificationCompat.Builder(this,CHANNEL_ID)
 				.setContentTitle("Notification")
@@ -79,11 +88,13 @@ public class MainActivity extends AppCompatActivity {
 				.setSmallIcon(R.drawable.ic_launcher)
 				.setOngoing(false)
 				.build();
-		noti.flags |= Notification.FLAG_INSISTENT;
+
 		//the following will modify an existing notification over and over
+		NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 		notificationManager.notify(MYNOTIFICATION1, noti);
 	}
 
+	private static final String CHANNEL_ID = "KP";
 	private void createNotificationChannel() {
 		// Create the NotificationChannel, but only on API 26+ because
 		// the NotificationChannel class is new and not in the support library
