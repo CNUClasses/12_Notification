@@ -8,7 +8,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +20,8 @@ public class MainActivity extends AppCompatActivity {
 
 	private static final int MYNOTIFICATION = 1;
 	private static final int MYNOTIFICATION1 = 100;
-	private static final String CHANNEL_ID = "10";
+	private static final String CHANNEL_ID = "KP";
+	int progress = 0;
 
 	private int myCount =0;
 
@@ -25,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		createNotificationChannel();
 	}
-
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -49,31 +53,27 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	public void doNotification(View v) {
+		progress = progress+10;
 		boolean useIndeterminateProgressBar = true;
-		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-		Notification noti = new Notification.Builder(this)
-		.setContentTitle(getString(R.string.app_name))
-		.setContentText("Just a Notice")
-		.setSmallIcon(R.drawable.ic_launcher)
-		.setOngoing(true)						//true only dismissable by app
-		.setProgress(100,50,useIndeterminateProgressBar )				//show a progress bar
-		.build();
-
-		noti.flags |= Notification.FLAG_INSISTENT;
-		notificationManager.notify(MYNOTIFICATION, noti);
+		NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+				.setSmallIcon(R.drawable.ic_launcher)
+				.setContentTitle(getString(R.string.app_name))
+				.setContentText("Just a Notice")
+				.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+		notificationManager.notify(MYNOTIFICATION, builder.build());
 	}
 
 	public void doCancelNotification(View v) {
-		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 		notificationManager.cancel(MYNOTIFICATION);
 	}
 
 	public void doIncrementNotification(View view) {
 		myCount++;
-		NotificationManager notificationManager = (NotificationManager) this.getSystemService(this.NOTIFICATION_SERVICE);
+		NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
-		Notification noti = new Notification.Builder(this)
+		Notification noti = new NotificationCompat.Builder(this,CHANNEL_ID)
 				.setContentTitle("Notification")
 				.setContentText("with user set content, number =" + Integer.toString(myCount))
 				.setSmallIcon(R.drawable.ic_launcher)
@@ -82,8 +82,21 @@ public class MainActivity extends AppCompatActivity {
 		noti.flags |= Notification.FLAG_INSISTENT;
 		//the following will modify an existing notification over and over
 		notificationManager.notify(MYNOTIFICATION1, noti);
+	}
 
-		//the following creates a new notification
-//		notificationManager.notify(myCount, noti);
+	private void createNotificationChannel() {
+		// Create the NotificationChannel, but only on API 26+ because
+		// the NotificationChannel class is new and not in the support library
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			CharSequence name = getString(R.string.channel_name);
+			String description = getString(R.string.channel_description);
+			int importance = NotificationManager.IMPORTANCE_DEFAULT;
+			NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+			channel.setDescription(description);
+			// Register the channel with the system; you can't change the importance
+			// or other notification behaviors after this
+			NotificationManager notificationManager = getSystemService(NotificationManager.class);
+			notificationManager.createNotificationChannel(channel);
+		}
 	}
 }
