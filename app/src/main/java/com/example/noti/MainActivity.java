@@ -4,11 +4,13 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -23,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
 	int progress = 0;
 
-	private int myCount =0;
+	private int myCount = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 		int PROGRESS_MAX = 100;
 		int PROGRESS_CURRENT = progress;
 		builder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
-		progress =progress+10;
+		progress = progress + 10;
 
 		//get a manager and post notification
 
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 	public void doIncrementNotification(View view) {
 		myCount++;
 
-		Notification noti = new NotificationCompat.Builder(this,CHANNEL_ID)
+		Notification noti = new NotificationCompat.Builder(this, CHANNEL_ID)
 				.setContentTitle("Notification")
 				.setContentText("with user set content, number =" + Integer.toString(myCount))
 				.setSmallIcon(R.drawable.ic_launcher)
@@ -71,6 +73,16 @@ public class MainActivity extends AppCompatActivity {
 
 		//the following will modify an existing notification over and over
 		NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+		if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+			// TODO: Consider calling
+			//    ActivityCompat#requestPermissions
+			// here to request the missing permissions, and then overriding
+			//   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+			//                                          int[] grantResults)
+			// to handle the case where the user grants the permission. See the documentation
+			// for ActivityCompat#requestPermissions for more details.
+			return;
+		}
 		notificationManager.notify(MYNOTIFICATION1, noti);
 	}
 
