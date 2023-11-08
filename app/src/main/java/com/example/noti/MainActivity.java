@@ -32,41 +32,21 @@ public class MainActivity extends AppCompatActivity {
 		createNotificationChannel();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
 	public void doNotification(View v) {
-		boolean useIndeterminateProgressBar = true;
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
 				.setSmallIcon(R.drawable.ic_launcher)
 				.setContentTitle(getString(R.string.app_name))
 				.setContentText("Just a Notice")
 				.setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-		//want a progressbar? Do this
-//		int PROGRESS_MAX = 100;
-//		int PROGRESS_CURRENT = progress;
-//		builder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
-//		progress =progress+10;
+//		want a progressbar? Do this
+		int PROGRESS_MAX = 100;
+		int PROGRESS_CURRENT = progress;
+		builder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
+		progress =progress+10;
 
 		//get a manager and post notification
+
 		NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 		notificationManager.notify(MYNOTIFICATION, builder.build());
 	}
